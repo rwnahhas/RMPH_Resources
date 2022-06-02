@@ -1,7 +1,8 @@
 # Functions for Introduction to Regression Methods for Public Health Using R (RMPH)
 # Ramzi W. Nahhas, PhD
+# 2022
 
-# May 26, 2022
+# June 2, 2022
 
 # These functions are provided with no express or implied warranty and
 # are licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License
@@ -51,17 +52,28 @@ catplot <- function(PREDICTOR, OUTCOME, DAT, COL = "gray", ...) {
 }
 
 # Linear Regression
-check_normality <- function(fit, ...) {
+
+check_normality <- function(fit, ylim = NULL, ...) {
   # The check_normality() function is provided with no express or implied warranty.
   
-  RESID <- resid(fit)
-  hist(RESID, xlab = "Residuals", probability = T, ...)
-  lines(density(RESID, na.rm=T), lwd = 2, col = "red")
+  # If ylim is not supplied, the code will automatically figure out what 
+  # it should be
+  
+  RESID   <- resid(fit)
+  HIST    <- hist(RESID, plot = F)$density
+  DENSITY <- density(RESID, na.rm=T)
+  if (is.null(ylim)) {
+    # Automatically compute ylim to include both the histogram
+    # and the density curve in the plot
+    ylim <- c(0, max(c(HIST, DENSITY$y)))
+  }
+  hist(RESID, xlab = "Residuals", probability = T, ylim=ylim, ...)
+  lines(DENSITY, lwd = 2, col = "red")
   curve(dnorm(x, mean = mean(RESID, na.rm=T), sd = sd(RESID, na.rm=T)),
         lty = 2, lwd = 2, add = TRUE, col = "blue")
 }
 # Example
-# check_normality(fit.ex6.1, main="", ylim = c(0, 0.6))
+# check_normality(fit.ex6.1, main="")
 
 # Epidemiology functions ####
 # odds and odds ratio (OR)
