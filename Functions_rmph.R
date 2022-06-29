@@ -58,8 +58,14 @@ check_normality <- function(fit, sample.size=T, ylim = NULL, ...) {
   
   # If ylim is not supplied, the code will automatically figure out what 
   # it should be
+
+  if(sample.size) print(paste("Sample Size =", length(RESID)))
   
+  # Unstandardized residuals
   RESID   <- fit$residuals
+  
+  par(mfrow=c(1,2))
+  # Histogram of residuals
   HIST    <- hist(RESID, plot = F)$density
   DENSITY <- density(RESID, na.rm=T)
   if (is.null(ylim)) {
@@ -71,7 +77,11 @@ check_normality <- function(fit, sample.size=T, ylim = NULL, ...) {
   lines(DENSITY, lwd = 2, col = "red")
   curve(dnorm(x, mean = mean(RESID, na.rm=T), sd = sd(RESID, na.rm=T)),
         lty = 2, lwd = 2, add = TRUE, col = "blue")
-  if(sample.size) print(paste("Sample Size =", length(RESID)))
+  
+  # Normal quantile-quantile (QQ) plot
+  qqnorm(as.numeric(RESID), col="red", pch=20)
+  qqline(as.numeric(RESID), col="blue", lty=2, lwd=2)
+  par(mfrow=c(1,1))
 }
 # Example
 # check_normality(fit.ex6.1, main="")
