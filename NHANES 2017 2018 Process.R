@@ -635,7 +635,15 @@ is.factor(nhanes_adult_fast_sub$cat_not_factor)
 
 # Full dataset
 save(nhanes,                file = "nhanes1718_rmph.Rdata")
+
 # Subsamples
+
+nhanes_adult_exam_sub <- nhanes_adult_exam_sub %>% 
+  select(-SEQN, -WTINT2YR, -WTMEC2YR, -SDMVPSU, -SDMVSTRA)
+
+nhanes_adult_fast_sub <- nhanes_adult_fast_sub %>% 
+  select(-SEQN, -WTINT2YR, -WTMEC2YR, -SDMVPSU, -SDMVSTRA)
+
 save(nhanes_adult_exam_sub, file = "nhanes1718_adult_exam_sub_rmph.Rdata")
 save(nhanes_adult_fast_sub, file = "nhanes1718_adult_fast_sub_rmph.Rdata")
 
