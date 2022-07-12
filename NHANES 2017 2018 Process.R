@@ -650,7 +650,6 @@ write(Hmisc::html(Hmisc::describe(nhanes)), "nhanes1718_rmph.html")
 write(Hmisc::html(Hmisc::describe(nhanes_adult_exam_sub)), "nhanes1718_adult_exam_sub_rmph.html")
 write(Hmisc::html(Hmisc::describe(nhanes_adult_fast_sub)), "nhanes1718_adult_fast_sub_rmph.html")
 
-
 #---
 # Create matched case-control data example ####
 #---
@@ -731,5 +730,61 @@ nhanes_CC <- CCdat
 summary(nhanes_CC)
 
 save(nhanes_CC, file = "nhanes_CC_rmph.Rdata")
+
+#---
+# Create small n dataset for text example ####
+#---
+
+library(tidyverse)
+load("nhanes1718_adult_fast_sub_rmph.Rdata")
+nhanesf <- nhanes_adult_fast_sub
+rm(nhanes_adult_fast_sub)
+
+nhanesf.complete <- nhanesf %>% 
+  select(LBDGLUSI, BMXWAIST, smoker, RIDAGEYR,
+         RIAGENDR, RIDRETH3, income) %>% 
+  drop_na() %>% 
+  mutate(race_eth = fct_collapse(RIDRETH3,
+                                 "Hispanic"           = c("Mexican American", "Other Hispanic"),
+                                 "Non-Hispanic Other" = c("Non-Hispanic Asian", "Other/Multi")))
+
+nhanesf.complete$race_ethb <- nhanesf.complete$race_eth
+nhanesf.complete$incomeb <- nhanesf.complete$income
+
+nhanesf.complete <- nhanesf.complete %>% 
+  mutate(cRIDAGEYR = RIDAGEYR - 40,
+         cBMXWAIST = BMXWAIST - 100)
+
+set.seed(345823)
+
+# Randomly select 50 rows from the dataset
+ROWS.SUBSET <- sample(1:nrow(nhanesf.complete), 50)
+nhanesf.complete.50 <- nhanesf.complete[ROWS.SUBSET,]
+nrow(nhanesf.complete.50)
+
+save(nhanesf.complete.50, file = "nhanesf.complete.50_rmph.Rdata")
+
+
+#---
+# Create small n dataset for exercise ####
+#---
+
+library(tidyverse)
+load("nhanes1718_adult_fast_sub_rmph.Rdata")
+nhanesf <- nhanes_adult_fast_sub
+rm(nhanes_adult_fast_sub)
+
+nhanesf.complete <- nhanesf %>% 
+  select(LBDTRSI, DXDTRPF, RIDAGEYR, RIAGENDR) %>% 
+  drop_na()
+
+set.seed(53247)
+
+# Randomly select 30 rows from the dataset
+ROWS.SUBSET <- sample(1:nrow(nhanesf.complete), 30)
+nhanesf.complete.30 <- nhanesf.complete[ROWS.SUBSET,]
+nrow(nhanesf.complete.30)
+
+save(nhanesf.complete.30, file = "nhanesf.complete.30_rmph.Rdata")
 
 
