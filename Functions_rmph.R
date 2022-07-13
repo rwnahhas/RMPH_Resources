@@ -1,8 +1,8 @@
 # Functions for Introduction to Regression Methods for Public Health Using R (RMPH)
 # Ramzi W. Nahhas, PhD
-# 2022
+# ramzi.nahhas@wright.edu
 
-# June 2, 2022
+# July 13, 2022
 
 # These functions are provided with no express or implied warranty and
 # are licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License
@@ -59,10 +59,20 @@ check_normality <- function(fit, sample.size=T, ylim = NULL, ...) {
   # If ylim is not supplied, the code will automatically figure out what 
   # it should be
 
-  if(sample.size) print(paste("Sample Size =", length(RESID)))
-  
   # Unstandardized residuals
   RESID   <- fit$residuals
+
+  if(sample.size) {
+    # Sample size vs. # of predictors
+    print(paste("The sample size is",
+                length(RESID),
+                "and there are",
+                length(coef(fit))-1,
+                "predictors."))
+    print(paste("There are",
+                round(length(RESID)/(length(coef(fit))-1), 1),
+                "observations per predictor."))
+  }
   
   par(mfrow=c(1,2))
   # Histogram of residuals
@@ -121,6 +131,7 @@ check_normality <- function(fit, sample.size=T, ylim = NULL, ...) {
 }
 
 # Logistic regression ####
+
 calibration.plot <- function(fit, g = 10,
                              show.bins = F, show.points = F, silent = T, drop.leading0 = T,
                              zoom = F, zoom.x = zoom, zoom.y = zoom, smooth.df = 5) {
@@ -295,6 +306,8 @@ nimpute <- function(DAT, method = "any") {
 }
 
 vm <- function(x) {
+  # The vm() function is provided with no express or implied warranty.
+  
   # Sample variance of the mean
   var(x) / length(x)
 }
