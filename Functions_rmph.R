@@ -51,8 +51,6 @@ catplot <- function(PREDICTOR, OUTCOME, DAT, COL = "gray", ...) {
   lines( 1:NX, MEANS, col = "red")  
 }
 
-# Linear Regression
-
 check_normality <- function(fit, sample.size=T, ylim = NULL, ...) {
   # The check_normality() function is provided with no express or implied warranty.
   
