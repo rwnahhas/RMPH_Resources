@@ -132,7 +132,8 @@ check_normality <- function(fit, sample.size=T, ylim = NULL, ...) {
 
 calibration.plot <- function(fit, g = 10,
                              show.bins = F, show.points = F, silent = T, drop.leading0 = T,
-                             zoom = F, zoom.x = zoom, zoom.y = zoom, smooth.df = 5) {
+                             zoom = F, zoom.x = zoom, zoom.y = zoom, smooth.df = 5,
+                             TITLE = "Calibration Plot") {
   # The calibration.plot() function is provided with no express or implied warranty.
   
   # Plot observed proportions vs. predicted probabilities, binned by predicted probability groups
@@ -204,9 +205,11 @@ calibration.plot <- function(fit, g = 10,
   } else if(length(zoom.y) == 2 & is.numeric(zoom.y)) {
     YLIM <- zoom.y
   }
+  
   plot(0, 0, col = "white", xlim = XLIM, ylim = YLIM,
        xlab = "Average predicted probability", ylab = "Observed proportion",
-       main = "Calibration Plot")
+       main = TITLE)
+
   if(show.points) points(jitter(y, 0.05), jitter(x, 0.05), pch = 20, cex = 0.75, col = "gray")
   
   abline(a = 0, b = 1, lty = 2, lwd = 2, col = "darkgray")
