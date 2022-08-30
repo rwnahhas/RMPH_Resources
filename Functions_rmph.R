@@ -130,7 +130,7 @@ check_normality <- function(fit, sample.size=T, ylim = NULL, ...) {
 
 # Logistic regression ####
 
-calibration.plot <- function(fit, g = 10,
+calibration.plot <- function(fit, g = 10, show.p = T,
                              show.bins = F, show.points = F, silent = T, drop.leading0 = T,
                              zoom = F, zoom.x = zoom, zoom.y = zoom, smooth.df = 5,
                              TITLE = "Calibration Plot") {
@@ -143,6 +143,7 @@ calibration.plot <- function(fit, g = 10,
   # fit = a glm() fit from a logistic regression
   # g = number of bins to use to calculate quantiles
   # Additional arguments
+  # show.p = T to show the HL p-value on the plot
   # show.bins = T to add vertical lines at the bin boundaries
   # show.points = T to plot the jittered observed and predicted values
   # silent = F to return the Hosmer-Lemeshow (HL) test
@@ -165,7 +166,7 @@ calibration.plot <- function(fit, g = 10,
   # Average estimated proportions in each bin
   P.EXP = tapply(y, list(Y.CUT), mean)
   # Proportion of observed outcome = 1 values in each bin
-  P.OBS  = tapply(x, list(Y.CUT), mean)
+  P.OBS = tapply(x, list(Y.CUT), mean)
   # Number of observed outcome = 1 values in each bin
   X = as.numeric(tapply(x, list(Y.CUT), sum))
   # Size of each bin
@@ -224,7 +225,7 @@ calibration.plot <- function(fit, g = 10,
   legend(0, 1, c("Perfect", "Observed"),
          lwd = c(2, 1), lty = c(2, 1), col = c("darkgray", "black"),
          bty = "n", seg.len = 4)
-  text(1, 0.1, P, pos = 2)
+  if (show.p) text(1, 0.1, P, pos = 2)
   par(op)
   if(!silent) return(HL)
 }
