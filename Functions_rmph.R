@@ -232,16 +232,17 @@ calibration.plot <- function(fit, g = 10, show.p = T,
 
 # Complex survey analysis ####
 
-Anova_design_df <- function(FIT) {
-  # The Anova_design_df() function is provided with no express or implied warranty.
-  
-  ANOVA <- car::Anova(FIT, type = 3, test.statistic = "F")
-  ANOVA$`Pr(>F)` <- pf(ANOVA$F, ANOVA$Df, degf(FIT$survey.design),
-                       lower.tail = F)
-  rownames(ANOVA)[length(rownames(ANOVA))] <- "Design DF"
-  ANOVA["Design DF", "Df"] <- degf(FIT$survey.design)
-  return(ANOVA)
-}
+# # NOT NEEDED... The error.df option in car::Anova.svyglm allows changing the DF
+# Anova_design_df <- function(FIT) {
+#   # The Anova_design_df() function is provided with no express or implied warranty.
+#   
+#   ANOVA <- car::Anova(FIT, type = 3, test.statistic = "F")
+#   ANOVA$`Pr(>F)` <- pf(ANOVA$F, ANOVA$Df, degf(FIT$survey.design),
+#                        lower.tail = F)
+#   rownames(ANOVA)[length(rownames(ANOVA))] <- "Design DF"
+#   ANOVA["Design DF", "Df"] <- degf(FIT$survey.design)
+#   return(ANOVA)
+# }
 
 svycontrast_design_df <- function(FIT, VECTOR, LEVEL=0.95, EXP=F, DF="design") {
   # The svycontrast_design_df() function is provided with no express or implied warranty.
