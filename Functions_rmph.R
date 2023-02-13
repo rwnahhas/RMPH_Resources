@@ -246,6 +246,7 @@ calibration.plot <- function(fit, g = 10, show.p = T,
 
 svycontrast_design_df <- function(FIT, VECTOR, LEVEL=0.95, EXP=F, DF="design") {
   # The svycontrast_design_df() function is provided with no express or implied warranty.
+  # Specify anything other than "design" to use R's default DF
   
   CONTRAST <- svycontrast(FIT, VECTOR)
   # Use coef() and vcov() to extract elements from the contrast
