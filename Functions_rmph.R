@@ -244,24 +244,29 @@ calibration.plot <- function(fit, g = 10, show.p = T,
 #   return(ANOVA)
 # }
 
-svycontrast_design_df <- function(FIT, VECTOR, LEVEL=0.95, EXP=F, DF="design") {
+svycontrast_design_df <- function(FIT, VECTOR, LEVEL=0.95, EXP=F, DESIGN.DF=T) {
   # The svycontrast_design_df() function is provided with no express or implied warranty.
-  # Specify anything other than "design" to use R's default DF
-  
+  # Specify DESIGN.DF=F to use R's default DF
+
   CONTRAST <- svycontrast(FIT, VECTOR)
+  
   # Use coef() and vcov() to extract elements from the contrast
   EST <- as.numeric(coef(CONTRAST))
   SE  <- as.numeric(sqrt(vcov(CONTRAST)))
-  if("coxph" %in% class(FIT)){
+  
+  # For svycoxph, the resid df is in degf.resid
+  # Create df.residual so the code below will work with a svycoxph object
+  if("svycoxph" %in% class(FIT)){
     FIT$df.residual <- FIT$degf.resid
   }
-  if(DF == "design") {
-    # Design DF
+
+  # Compute the CI
+  if(DESIGN.DF) {
     CI  <- EST + c(-1,1)*qt(1 - (1 - LEVEL)/2, degf(FIT$survey.design))*SE
-  } else {
-    # Default R DF
+  } else { # Default R DF
     CI  <- EST + c(-1,1)*qt(1 - (1 - LEVEL)/2, FIT$df.residual)*SE
   }
+  
   # If you want the est and ci for exp(contrast)
   if(EXP) {
     CI  <- exp(CI)
