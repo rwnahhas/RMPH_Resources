@@ -436,13 +436,13 @@ nrow(CCdat)
 table(CCdat$AB_NICU, exclude = NULL)
 
 levels(CCdat$AB_NICU)
-levels(CCdat$BWTR4)
+levels(CCdat$RF_PPTERM)
+
 natality_CC <- CCdat %>% 
-  mutate(BWTR4   = factor(BWTR4,
-                          levels = rev(levels(CCdat$BWTR4)))) %>% 
-  select(AB_NICU, BWTR4, MEDUC, MAGER)
-table(CCdat$AB_NICU, natality_CC$AB_NICU, exclude = NULL)
-table(CCdat$BWTR4,   natality_CC$BWTR4,   exclude = NULL)
+  select(AB_NICU, RF_PPTERM, MEDUC, MAGER)
+
+summary(natality_CC)
+# 1 missing value
 
 natality_CC <- natality_CC %>% 
   drop_na()
