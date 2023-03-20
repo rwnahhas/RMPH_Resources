@@ -331,6 +331,8 @@ mi.mean.se.sd <- function(IMP, X) {
   # X is a character value (e.g., "varname")
   
   # So I can refer to X later
+  # Do NOT use include = TRUE here as these computations
+  # are just on the imputed data.
   IMPDAT    <- complete(IMP, "long")
   IMPDAT$.x <- IMPDAT[[X]]
 
@@ -361,10 +363,13 @@ mi.n.p <- function(IMP, X) {
   # X is a character value (e.g., "varname")
   
   # So I can refer to X later
+  # Must use include = TRUE here or as.mids will not work 
   IMPDAT    <- complete(IMP, "long", include = TRUE)
   IMPDAT$.x <- IMPDAT[[X]]
   IMP       <- as.mids(IMPDAT)
   
+  # with() automatically excludes the original data
+  # and just does this on the imputed data
   TAB <- matrix(unlist(with(IMP, table(.x))$analyses),
                 nrow=IMP$m, byrow = T)
   N <- apply(TAB, 2, mean)
@@ -392,6 +397,8 @@ mi.mean.se.sd.by <- function(IMP, X, BY) {
   # BY is a character value for a factor variable to stratify by
   
   # So I can refer to X and BY = Z later
+  # Do NOT use include = TRUE here as these computations
+  # are just on the imputed data.
   IMPDAT    <- complete(IMP, "long")
   IMPDAT$.x <- IMPDAT[[X]]
   IMPDAT$.z <- IMPDAT[[BY]]
@@ -439,6 +446,7 @@ mi.n.p.by <- function(IMP, X, BY) {
   # BY is a character value for a factor variable to stratify by
   
   # So I can refer to X and BY = Z later
+  # Must use include = TRUE here or as.mids will not work 
   IMPDAT    <- complete(IMP, "long", include = TRUE)
   IMPDAT$.x <- IMPDAT[[X]]
   IMPDAT$.z <- IMPDAT[[BY]]
@@ -447,6 +455,8 @@ mi.n.p.by <- function(IMP, X, BY) {
   LEVELS <- levels(IMPDAT$.z)
   
   for(i in 1:length(LEVELS)) {
+    # with() automatically excludes the original data
+    # and just does this on the imputed data
     TAB <- matrix(unlist(with(IMP, table(.x[.z == levels(.z)[i]]))$analyses),
                   nrow=IMP$m, byrow = T)
     N <- apply(TAB, 2, mean)
