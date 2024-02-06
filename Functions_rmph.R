@@ -87,8 +87,9 @@ check_normality <- function(fit, sample.size=T, ylim = NULL, ...) {
         lty = 2, lwd = 2, add = TRUE, col = "blue")
   
   # Normal quantile-quantile (QQ) plot
-  qqnorm(as.numeric(RESID), col="red", pch=20)
-  qqline(as.numeric(RESID), col="blue", lty=2, lwd=2)
+  # qqnorm(as.numeric(RESID), col="red", pch=20)
+  qqnorm(rstandard(fit), col="red", pch=20)
+  abline(a=0, b=1, col="blue", lty=2, lwd=2)
   par(mfrow=c(1,1))
 }
 # Example
