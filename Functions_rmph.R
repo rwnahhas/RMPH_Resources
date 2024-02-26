@@ -296,24 +296,26 @@ round.summary <- function(FIT.MI, conf.int=T, digits=4, DATA.FRAME=T, ...) {
   return(DF)
 }
 
-nimpute <- function(DAT, method = "any") {
-  # The nimpute() function is provided with no express or implied warranty.
-  
-  # METHOD = "avg" to compute based on the average (over variables) fraction of cases with missing data
-  #                among all variables, regardless of whether or not they have any missing values.
-  # METHOD = "avg_gt_0" to compute based on the average (over variables) fraction of cases with missing data
-  #                     among variables that have any missing values.
-  # METHOD = "any" to compute based on the fraction of cases with a missing value for any variable.
-  if (method == "avg") {
-    p <- mean(sapply(DAT, function(x) mean(is.na(x))))
-  } else if (method == "avg_gt_0") {
-    p <- sapply(DAT, function(x) mean(is.na(x)))
-    p <- mean(p[p > 0])
-  } else if (method == "any") {
-    p <- mean(!complete.cases(DAT))
-  }
-  return(max(5, round(100*p)))
-}
+# NO LONGER USED - Outdated. See von Hippel 2020 for better method
+# incorporated in Section 9.9 in the text
+# nimpute <- function(DAT, method = "any") {
+#   # The nimpute() function is provided with no express or implied warranty.
+#   
+#   # METHOD = "avg" to compute based on the average (over variables) fraction of cases with missing data
+#   #                among all variables, regardless of whether or not they have any missing values.
+#   # METHOD = "avg_gt_0" to compute based on the average (over variables) fraction of cases with missing data
+#   #                     among variables that have any missing values.
+#   # METHOD = "any" to compute based on the fraction of cases with a missing value for any variable.
+#   if (method == "avg") {
+#     p <- mean(sapply(DAT, function(x) mean(is.na(x))))
+#   } else if (method == "avg_gt_0") {
+#     p <- sapply(DAT, function(x) mean(is.na(x)))
+#     p <- mean(p[p > 0])
+#   } else if (method == "any") {
+#     p <- mean(!complete.cases(DAT))
+#   }
+#   return(max(5, round(100*p)))
+# }
 
 vm <- function(x) {
   # The vm() function is provided with no express or implied warranty.
