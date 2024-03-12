@@ -9,7 +9,7 @@
 # Contents:        Download and process NHANES data to create example datasets
 #---
 
-# install.packages("tidyverse", "nhanesA", "Hmisc")
+# install.packages("tidyverse", "nhanesA", "Hmisc", "survey")
 library(tidyverse)
 library(nhanesA) # To import NHANES files
 
@@ -34,21 +34,31 @@ myxtab <- function(x1, x2) table(x1, x2, exclude = NULL)
 # Demographics ####
 #---
 
-demo    <- nhanes("DEMO_J") %>% # Demographics: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DEMO_J.htm
+# UPDATE: 3/11/2024. nhanes() now reads in the variables as factors, so the old code that converted numeric
+#                    to factors results in missing values. Updated the code to remove coding as factors.
+#                    cleanse_numeric=T sets missing value codes to NA.
+
+demo    <- nhanes("DEMO_J", cleanse_numeric=T) %>% # Demographics: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DEMO_J.htm
   select(SEQN, WTINT2YR, WTMEC2YR, SDMVPSU, SDMVSTRA, RIAGENDR, RIDAGEYR, RIDRETH3, DMDEDUC2, INDHHIN2)
 # demo    <- nhanesTranslate("DEMO_J", names(demo), data = demo)
 # Works but creates labels that are too long
 
+# The NAs used to be 0 in the old version.
+# Set to 0 to match the book (and the online codebook!)
+summary(demo$WTMEC2YR)
+demo$WTMEC2YR[is.na(demo$WTMEC2YR)] <- 0
+summary(demo$WTMEC2YR)
+
 #---
 # Examination data ####
 #---
-bpx     <- nhanes("BPX_J") %>% # Blood Pressure: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/BPX_J.htm
+bpx     <- nhanes("BPX_J", cleanse_numeric=T) %>% # Blood Pressure: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/BPX_J.htm
   select(SEQN, PEASCCT1, BPXPLS, BPXSY1, BPXSY2, BPXSY3, BPXDI1, BPXDI2, BPXDI3)
 summary(bpx) # No missing value codes
-bmx     <- nhanes("BMX_J") %>% #  Body Measures: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/BMX_J.htm
+bmx     <- nhanes("BMX_J", cleanse_numeric=T) %>% #  Body Measures: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/BMX_J.htm
   select(SEQN, BMXWT, BMXHT, BMXBMI, BMXARMC, BMXWAIST)
 summary(bmx) # No missing value codes
-dxx     <- nhanes("DXX_J") %>% #  Dual-Energy X-ray Absorptiometry - Whole Body: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DXX_J.htm
+dxx     <- nhanes("DXX_J", cleanse_numeric=T) %>% #  Dual-Energy X-ray Absorptiometry - Whole Body: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DXX_J.htm
   select(SEQN, DXXTRFAT, DXDTRPF, DXDTOBMC, DXDTOBMD, DXDTOFAT, DXDTOPF)
 summary(dxx) # No missing value codes
 
@@ -56,29 +66,29 @@ summary(dxx) # No missing value codes
 # Laboratory data ####
 #---
 
-alb_cr <- nhanes("ALB_CR_J") %>% #  Albumin & Creatinine - Urine: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/ALB_CR_J.htm
+alb_cr <- nhanes("ALB_CR_J", cleanse_numeric=T) %>% #  Albumin & Creatinine - Urine: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/ALB_CR_J.htm
   select(SEQN, URXCRS)
 # No SI version for albumin
 summary(alb_cr) # No missing value codes
-hdl    <- nhanes("HDL_J")    %>% #  Cholesterol - High - Density Lipoprotein (HDL): https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/HDL_J.htm
+hdl    <- nhanes("HDL_J", cleanse_numeric=T)    %>% #  Cholesterol - High - Density Lipoprotein (HDL): https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/HDL_J.htm
   select(SEQN, LBDHDDSI)
 summary(hdl) # No missing value codes
-trigly <- nhanes("TRIGLY_J") %>% #  Cholesterol - Low-Density Lipoproteins (LDL) & Triglycerides: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/TRIGLY_J.htm
+trigly <- nhanes("TRIGLY_J", cleanse_numeric=T) %>% #  Cholesterol - Low-Density Lipoproteins (LDL) & Triglycerides: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/TRIGLY_J.htm
   select(SEQN, WTSAF2YR, LBDTRSI, LBDLDMSI)
 summary(trigly) # No missing value codes
-tchol  <- nhanes("TCHOL_J")  %>% #  Cholesterol - Total: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/TCHOL_J.htm
+tchol  <- nhanes("TCHOL_J", cleanse_numeric=T)  %>% #  Cholesterol - Total: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/TCHOL_J.htm
   select(SEQN, LBDTCSI)
 summary(tchol) # No missing value codes
-fertin <- nhanes("FERTIN_J") %>% #  Ferritin: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/FERTIN_J.htm
+fertin <- nhanes("FERTIN_J", cleanse_numeric=T) %>% #  Ferritin: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/FERTIN_J.htm
   select(SEQN, LBDFERSI)
 summary(fertin) # No missing value codes
-ghb    <- nhanes("GHB_J")    %>% #  Glycohemoglobin: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/GHB_J.htm
+ghb    <- nhanes("GHB_J", cleanse_numeric=T)    %>% #  Glycohemoglobin: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/GHB_J.htm
   select(SEQN, LBXGH)
 summary(ghb) # No missing value codes
-ins    <- nhanes("INS_J")    %>% #  Insulin: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/INS_J.htm
+ins    <- nhanes("INS_J", cleanse_numeric=T)    %>% #  Insulin: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/INS_J.htm
   select(SEQN, LBDINSI)
 summary(ins) # No missing value codes
-glu    <- nhanes("GLU_J")    %>% #  Plasma Fasting Glucose: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/GLU_J.htm
+glu    <- nhanes("GLU_J", cleanse_numeric=T)    %>% #  Plasma Fasting Glucose: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/GLU_J.htm
   select(SEQN, LBDGLUSI)
 summary(glu) # No missing value codes
 
@@ -86,33 +96,33 @@ summary(glu) # No missing value codes
 # Questionnaire data ####
 #---
 
-alq    <- nhanes("ALQ_J")    %>% #  Alcohol Use: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/ALQ_J.htm
+alq    <- nhanes("ALQ_J", cleanse_numeric=T)    %>% #  Alcohol Use: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/ALQ_J.htm
   select(SEQN, ALQ111, ALQ121, ALQ130, ALQ151)
 # # Skip pattern
 # table(alq$ALQ111, alq$ALQ130, exclude = NULL) # If 2, then skip
 # table(alq$ALQ121, alq$ALQ130, exclude = NULL) # If 0, then skip
 # table(alq$ALQ111, alq$ALQ151, exclude = NULL) # If 2, then skip
 # table(alq$ALQ121, alq$ALQ151, exclude = NULL) # Not skipped
-bpq    <- nhanes("BPQ_J")    %>% #  Blood Pressure & Cholesterol: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/BPQ_J.htm
+bpq    <- nhanes("BPQ_J", cleanse_numeric=T)    %>% #  Blood Pressure & Cholesterol: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/BPQ_J.htm
   select(SEQN, BPQ020, BPD035, BPQ080)
-diq    <- nhanes("DIQ_J")    %>% #  Diabetes: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DIQ_J.htm
+diq    <- nhanes("DIQ_J", cleanse_numeric=T)    %>% #  Diabetes: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DIQ_J.htm
   select(SEQN, DIQ010, DID040)
-dlq    <- nhanes("DLQ_J")    %>% #  Disability: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DLQ_J.htm
+dlq    <- nhanes("DLQ_J", cleanse_numeric=T)    %>% #  Disability: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DLQ_J.htm
   select(SEQN, DLQ010, DLQ020)
-duq    <- nhanes("DUQ_J")    %>% #  Drug Use: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DUQ_J.htm
+duq    <- nhanes("DUQ_J", cleanse_numeric=T)    %>% #  Drug Use: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DUQ_J.htm
   select(SEQN, DUQ200, DUQ210, DUQ213, DUQ230, DUQ240)
 # # Skip pattern
 # table(duq$DUQ200, duq$DUQ230, exclude = NULL) # If 2, then skip
-hiq    <- nhanes("HIQ_J")   %>% # Health Insurance: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/HIQ_J.htm
+hiq    <- nhanes("HIQ_J", cleanse_numeric=T)   %>% # Health Insurance: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/HIQ_J.htm
   select(SEQN, HIQ011) 
-mcq    <- nhanes("MCQ_J")   %>% # Medical conditions: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/MCQ_J.htm
+mcq    <- nhanes("MCQ_J", cleanse_numeric=T)   %>% # Medical conditions: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/MCQ_J.htm
   select(SEQN, MCQ010, MCQ025,
          MCQ160B, MCQ160C, MCQ160D, MCQ160E, MCQ160F,
          MCD180B, MCD180C, MCD180D, MCD180E, MCD180F,
          MCQ220,  MCD240A)
-dpq    <- nhanes("DPQ_J")   %>% # Mental Health - Depression Screener: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DPQ_J.htm
+dpq    <- nhanes("DPQ_J", cleanse_numeric=T)   %>% # Mental Health - Depression Screener: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DPQ_J.htm
   select(SEQN, DPQ010, DPQ020, DPQ030, DPQ040, DPQ050, DPQ060, DPQ070, DPQ080, DPQ090)
-paq    <- nhanes("PAQ_J")   %>% # Physical Activity - https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/PAQ_J.htm
+paq    <- nhanes("PAQ_J", cleanse_numeric=T)   %>% # Physical Activity - https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/PAQ_J.htm
     select(SEQN, PAQ605, PAQ610, PAD615, PAQ635, PAQ640, PAD645, PAQ650, PAQ655, PAD660)
 # # Skip pattern
 # summary(paq$PAQ610[paq$PAQ605 == 2]) # Set these to 0
@@ -121,9 +131,9 @@ paq    <- nhanes("PAQ_J")   %>% # Physical Activity - https://wwwn.cdc.gov/Nchs/
 # summary(paq$PAD645[paq$PAQ635 == 2]) # Set these to 0
 # summary(paq$PAQ655[paq$PAQ650 == 2]) # Set these to 0
 # summary(paq$PAD660[paq$PAQ650 == 2]) # Set these to 0
-slq    <- nhanes("SLQ_J")   %>% # Sleep Disorders: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/SLQ_J.htm
+slq    <- nhanes("SLQ_J", cleanse_numeric=T)   %>% # Sleep Disorders: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/SLQ_J.htm
   select(SEQN, SLD012, SLD013, SLQ030, SLQ040, SLQ050, SLQ120)
-smq    <- nhanes("SMQ_J")   %>% # Smoking - Cigarette Use - https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/SMQ_J.htm
+smq    <- nhanes("SMQ_J", cleanse_numeric=T)   %>% # Smoking - Cigarette Use - https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/SMQ_J.htm
   select(SEQN, SMQ020, SMQ040)
 
 #---
@@ -254,25 +264,32 @@ unlist(lapply(nhanes0, myfun))
 #       If using for a survival analysis, can set to be current age and censored (but do not change now)
 
 nhanes1 <- nhanes0 %>%
-  mutate(RIDAGEYR = as.double(RIDAGEYR),
-         RIAGENDR = factor(RIAGENDR,
-                           levels = 1:2,
-                           labels = c("Male", "Female")),
-         RIDRETH3 = factor(RIDRETH3,
-                           levels = c(1:4, 6:7), # No level 5
+  mutate(RIDRETH3 = factor(RIDRETH3,
                            labels = c("Mexican American", "Other Hispanic", "Non-Hispanic White",
                                       "Non-Hispanic Black", "Non-Hispanic Asian", "Other/Multi")),
          DMDEDUC2 = factor(DMDEDUC2,
-                           levels = 1:5,
+                           levels = c("Less than 9th grade",
+                                      "9-11th grade (Includes 12th grade with no diploma)",
+                                      "High school graduate/GED or equivalent",
+                                      "Some college or AA degree",
+                                      "College graduate or above"),
                            labels = c("< 9", "9-11", "HS/GED", "Some college/AA", "College grad")),
-         # Collapsing income into 3 categories
-         income   = case_when(INDHHIN2 %in% c(1:5, 13)       ~ 1,
-                              INDHHIN2 %in% 6:8              ~ 2,
-                              INDHHIN2 %in% c(9, 10, 14, 15) ~ 3),
+         income   = fct_collapse(INDHHIN2,
+                                 "< $25,000" = c("$ 0 to $ 4,999",
+                                                 "$ 5,000 to $ 9,999",
+                                                 "$10,000 to $14,999",
+                                                 "$15,000 to $19,999",
+                                                 "$20,000 to $24,999",
+                                                 "Under $20,000"),
+                                 "$25,000 to < $55,000" = c("$25,000 to $34,999",
+                                                            "$35,000 to $44,999",
+                                                            "$45,000 to $54,999"),
+                                 "$55,000+" = c("$55,000 to $64,999",
+                                                "$65,000 to $74,999",
+                                                "$75,000 to $99,999",
+                                                "$100,000 and Over")),
          income   = factor(income,
-                           levels = 1:3,
-                           labels = c("< $25,000", "$25,000 to < $55,000", "$55,000+")),
-         BPXPLS   = as.double(BPXPLS),
+                           levels = c("< $25,000", "$25,000 to < $55,000", "$55,000+")),
          sbp      = (as.numeric(BPXSY2) + as.numeric(BPXSY3)) / 2,
          sbp      = case_when(is.na(sbp) ~ (as.numeric(BPXSY1) + as.numeric(BPXSY3)) / 2,
                               TRUE       ~ sbp),
@@ -296,116 +313,109 @@ nhanes1 <- nhanes0 %>%
          dbp      = case_when(is.na(dbp) ~ as.numeric(BPXDI1),
                               TRUE       ~ dbp),
          # Skip pattern - impute 0 if no drinks in last year
-         ALQ130   = case_when(ALQ130 %in% c(777, 999) ~ as.double(NA),
-                              ALQ111 == 2 | ALQ121 == 0 ~ as.double(0),
+         ALQ130   = case_when(ALQ111 == "No" | ALQ121 == "Never in the last year" ~ as.double(0),
                               TRUE                      ~ as.double(ALQ130)),
          # Skip pattern: Impute No if never drink
-         ALQ151   = case_when(ALQ111 == 2 ~ as.double(2),
-                              TRUE        ~ as.double(ALQ151)),
+         ALQ151   = case_when(ALQ151 == "Yes"                  ~ 1,
+                              ALQ151 == "No" |  ALQ111 == "No" ~ 2),
          ALQ151   = factor(ALQ151, levels = 1:2, labels = c("Yes", "No")),
-         BPQ020   = factor(BPQ020, levels = 1:2, labels = c("Yes", "No")),
-         BPD035   = case_when(BPD035 %in% c(777, 999) ~ as.double(NA),
-                              TRUE                    ~ as.double(BPD035)),
-         BPQ080   = factor(BPQ080, levels = 1:2, labels = c("Yes", "No")),
-         DIQ010   = factor(DIQ010, levels = 1:3, labels = c("Yes", "No", "Borderline")),
-         DID040   = case_when(DID040 %in% c(777, 999) ~ as.double(NA),
-                              DID040  ==    666       ~ as.double(0.5),
+
+         BPQ020   = factor(BPQ020, levels = c("Yes", "No")),
+         BPQ080   = factor(BPQ080, levels = c("Yes", "No")),
+         
+         DIQ010   = factor(DIQ010, levels = c("Yes", "No", "Borderline")),
+         DID040   = case_when(DID040  ==    666       ~ as.double(0.5),
                               TRUE                    ~ as.double(DID040)),
-         DLQ010   = factor(DLQ010, levels = 1:2, labels = c("Yes", "No")),
-         DLQ020   = factor(DLQ020, levels = 1:2, labels = c("Yes", "No")),
+         DLQ010   = factor(DLQ010, levels = c("Yes", "No")),
+         DLQ020   = factor(DLQ020, levels = c("Yes", "No")),
          # Skip pattern: Impute 0 if never used marij
-         DUQ230   = case_when(DUQ200 == 2 ~ as.double(0),
-                              TRUE        ~ as.double(DUQ230)),
-         DUQ200   = factor(DUQ200, levels = 1:2, labels = c("Yes", "No")),
-         DUQ210   = case_when(DUQ210 %in% c(777, 999) ~ as.double(NA),
-                              TRUE                    ~ as.double(DUQ210)),
-         DUQ213   = case_when(DUQ213 %in% c(777, 999) ~ as.double(NA),
-                              TRUE                    ~ as.double(DUQ213)),
-         DUQ230   = case_when(DUQ230 %in% c(777, 999) ~ as.double(NA),
-                              TRUE                    ~ as.double(DUQ230)),
-         DUQ240   = factor(DUQ240, levels = 1:2, labels = c("Yes", "No")),
-         HIQ011   = factor(HIQ011, levels = 1:2, labels = c("Yes", "No")),
-         MCQ010   = factor(MCQ010, levels = 1:2, labels = c("Yes", "No")),
-         MCQ025   = case_when(MCQ025 %in% c(77777, 99999) ~ as.double(NA),
-                              TRUE                        ~ as.double(MCQ025)),
-         MCQ160B   = factor(MCQ160B, levels = 1:2, labels = c("Yes", "No")),
-         MCQ160C   = factor(MCQ160C, levels = 1:2, labels = c("Yes", "No")),
-         MCQ160D   = factor(MCQ160D, levels = 1:2, labels = c("Yes", "No")),
-         MCQ160E   = factor(MCQ160E, levels = 1:2, labels = c("Yes", "No")),
-         MCQ160F   = factor(MCQ160F, levels = 1:2, labels = c("Yes", "No")),
-         MCD180B   = case_when(MCD180B %in% c(77777, 99999) ~ as.double(NA),
-                              TRUE                        ~ as.double(MCD180B)),
-         MCD180C   = case_when(MCD180C %in% c(77777, 99999) ~ as.double(NA),
-                              TRUE                        ~ as.double(MCD180C)),
-         MCD180D   = case_when(MCD180D %in% c(77777, 99999) ~ as.double(NA),
-                              TRUE                        ~ as.double(MCD180D)),
-         MCD180E   = case_when(MCD180E %in% c(77777, 99999) ~ as.double(NA),
-                              TRUE                        ~ as.double(MCD180E)),
-         MCD180F   = case_when(MCD180F %in% c(77777, 99999) ~ as.double(NA),
-                              TRUE                        ~ as.double(MCD180F)),
+         DUQ230   = case_when(DUQ200 == "No" ~ as.double(0),
+                              TRUE           ~ as.double(DUQ230)),
+         DUQ200   = factor(DUQ200, levels = c("Yes", "No")),
+         DUQ240   = factor(DUQ240, levels = c("Yes", "No")),
+         
+         HIQ011   = factor(HIQ011, levels = c("Yes", "No")),
+         
+         MCQ010   = factor(MCQ010, levels = c("Yes", "No")),
+         
+         MCQ160B   = factor(MCQ160B, levels = c("Yes", "No")),
+         MCQ160C   = factor(MCQ160C, levels = c("Yes", "No")),
+         MCQ160D   = factor(MCQ160D, levels = c("Yes", "No")),
+         MCQ160E   = factor(MCQ160E, levels = c("Yes", "No")),
+         MCQ160F   = factor(MCQ160F, levels = c("Yes", "No")),
+         
          # Binary CVD variable (Yes if ANY yes, otherwise No if ANY no)
          cvd      = case_when(MCQ160B == "Yes" | MCQ160C == "Yes" | MCQ160D == "Yes" | MCQ160E == "Yes" | MCQ160F == "Yes" ~ 1,
                               MCQ160B == "No"  | MCQ160C == "No"  | MCQ160D == "No"  | MCQ160E == "No"  | MCQ160F == "No"  ~ 2),
          cvd      = factor(cvd, levels = 1:2, labels = c("Yes", "No")),
-         MCQ220   = factor(MCQ220, levels = 1:2, labels = c("Yes", "No")),
-         MCD240A  = case_when(MCD240A %in% c(77777, 99999) ~ as.double(NA),
-                               TRUE                        ~ as.double(MCD240A)),
-         DPQ010   = case_when(DPQ010 %in% c(7, 9) ~ as.double(NA),
-                              TRUE                ~ as.double(DPQ010)),
-         DPQ020   = case_when(DPQ020 %in% c(7, 9) ~ as.double(NA),
-                              TRUE                ~ as.double(DPQ020)),
-         DPQ030   = case_when(DPQ030 %in% c(7, 9) ~ as.double(NA),
-                              TRUE                ~ as.double(DPQ030)),
-         DPQ040   = case_when(DPQ040 %in% c(7, 9) ~ as.double(NA),
-                              TRUE                ~ as.double(DPQ040)),
-         DPQ050   = case_when(DPQ050 %in% c(7, 9) ~ as.double(NA),
-                              TRUE                ~ as.double(DPQ050)),
-         DPQ060   = case_when(DPQ060 %in% c(7, 9) ~ as.double(NA),
-                              TRUE               ~ as.double(DPQ060)),
-         DPQ070   = case_when(DPQ070 %in% c(7, 9) ~ as.double(NA),
-                              TRUE                ~ as.double(DPQ070)),
-         DPQ080   = case_when(DPQ080 %in% c(7, 9) ~ as.double(NA),
-                              TRUE                ~ as.double(DPQ080)),
-         DPQ090   = case_when(DPQ090 %in% c(7, 9) ~ as.double(NA),
-                              TRUE                ~ as.double(DPQ090)),
+         
+         MCQ220   = factor(MCQ220, levels = c("Yes", "No")),
+         
+         DPQ010   = as.numeric(DPQ010) - 1,
+         DPQ010   = ifelse(DPQ010 > 3, NA, DPQ010),
+         DPQ020   = as.numeric(DPQ020) - 1,
+         DPQ020   = ifelse(DPQ020 > 3, NA, DPQ020),
+         DPQ030   = as.numeric(DPQ030) - 1,
+         DPQ030   = ifelse(DPQ030 > 3, NA, DPQ030),
+         DPQ040   = as.numeric(DPQ040) - 1,
+         DPQ040   = ifelse(DPQ040 > 3, NA, DPQ040),
+         DPQ050   = as.numeric(DPQ050) - 1,
+         DPQ050   = ifelse(DPQ050 > 3, NA, DPQ050),
+         DPQ060   = as.numeric(DPQ060) - 1,
+         DPQ060   = ifelse(DPQ060 > 3, NA, DPQ060),
+         DPQ070   = as.numeric(DPQ070) - 1,
+         DPQ070   = ifelse(DPQ070 > 3, NA, DPQ070),
+         DPQ080   = as.numeric(DPQ080) - 1,
+         DPQ080   = ifelse(DPQ080 > 3, NA, DPQ080),
+         DPQ090   = as.numeric(DPQ090) - 1,
+         DPQ090   = ifelse(DPQ090 > 3, NA, DPQ090),
          phq9     = DPQ010 + DPQ020 + DPQ030 + DPQ040 + DPQ050 + DPQ060 + DPQ070 + DPQ080 + DPQ090,
          
          # Skip pattern: Set to days and minutes to 0 if no activity of that type
-         PAQ605   = factor(PAQ605, levels = 1:2, labels = c("Yes", "No")),
-         PAQ610   = case_when(PAQ610 %in% c(77, 99)     ~ as.double(NA),
-                              PAQ605 == "No"            ~ as.double(0),
+         PAQ605   = factor(PAQ605, levels = c("Yes", "No")),
+         PAQ610   = case_when(PAQ605 == "No"            ~ as.double(0),
                               TRUE                      ~ as.double(PAQ610)),
-         PAD615   = case_when(PAD615 %in% c(7777, 9999) ~ as.double(NA),
-                              PAQ605 == "No"            ~ as.double(0),
+         PAD615   = case_when(PAQ605 == "No"            ~ as.double(0),
                               TRUE                      ~ as.double(PAD615)),
-         PAQ635   = factor(PAQ635, levels = 1:2, labels = c("Yes", "No")),
-         PAQ640   = case_when(PAQ640 %in% c(77, 99)     ~ as.double(NA),
-                              PAQ635 == "No"            ~ as.double(0),
+         PAQ635   = factor(PAQ635, levels = c("Yes", "No")),
+         PAQ640   = case_when(PAQ635 == "No"            ~ as.double(0),
                               TRUE                      ~ as.double(PAQ640)),
-         PAD645   = case_when(PAD645 %in% c(7777, 9999) ~ as.double(NA),
-                              PAQ635 == "No"            ~ as.double(0),
+         PAD645   = case_when(PAQ635 == "No"            ~ as.double(0),
                               TRUE                      ~ as.double(PAD645)),
-         PAQ650   = factor(PAQ650, levels = 1:2, labels = c("Yes", "No")),
-         PAQ655   = case_when(PAQ655 %in% c(77, 99)     ~ as.double(NA),
-                              PAQ650 == "No"            ~ as.double(0),
+         PAQ650   = factor(PAQ650, levels = c("Yes", "No")),
+         PAQ655   = case_when(PAQ650 == "No"            ~ as.double(0),
                               TRUE                      ~ as.double(PAQ655)),
-         PAD660   = case_when(PAD660 %in% c(7777, 9999) ~ as.double(NA),
-                              PAQ650 == "No"            ~ as.double(0),
+         PAD660   = case_when(PAQ650 == "No"            ~ as.double(0),
                               TRUE                      ~ as.double(PAD660)),
-         SLQ030   = factor(SLQ030, levels = 0:3, labels = c("0", "1-2", "3-4", "5+")),
-         SLQ040   = factor(SLQ040, levels = 0:3, labels = c("0", "1-2", "3-4", "5+")),
-         SLQ050   = factor(SLQ050, levels = 1:2, labels = c("Yes", "No")),
-         SLQ120   = factor(SLQ120, levels = 0:4, labels = c("0", "1", "2-4", "5-15", "16-30")),
-         smoker   = case_when(SMQ020 == 2                   ~ 1,
-                              SMQ020 == 1 & SMQ040 == 3     ~ 2,
-                              SMQ020 == 1 & SMQ040 %in% 1:2 ~ 3),
+         SLQ030   = factor(SLQ030,
+                           levels = c("Never",
+                                      "Rarely - 1-2 nights a week",
+                                      "Occasionally - 3-4 nights a week",
+                                      "Frequently - 5 or more nights a week"),
+                           labels = c("0", "1-2", "3-4", "5+")),
+         SLQ040   = factor(SLQ040,
+                           levels = c("Never",
+                                      "Rarely - 1-2 nights a week",
+                                      "Occasionally - 3-4 nights a week",
+                                      "Frequently - 5 or more nights a week"),
+                           labels = c("0", "1-2", "3-4", "5+")),
+         SLQ050   = factor(SLQ050, levels = c("Yes", "No")),
+         SLQ120   = factor(SLQ120,
+                           levels = c("Never",
+                                      "Rarely - 1 time a month",
+                                      "Sometimes - 2-4 times a month",
+                                      "Often- 5-15 times a month",
+                                      "Almost always - 16-30 times a month"),
+                           labels = c("0", "1", "2-4", "5-15", "16-30")),
+         smoker   = case_when(SMQ020 == "No"                                            ~ 1,
+                              SMQ020 == "Yes" & SMQ040 == "Not at all"                  ~ 2,
+                              SMQ020 == "Yes" & SMQ040 %in% c("Every day", "Some days") ~ 3),
          smoker   = factor(smoker, levels = 1:3, labels = c("Never", "Past", "Current")))
 
 #---
 # Check derivations ####
 #---
 
-# myxtab(nhanes0$RIAGENDR, nhanes1$RIAGENDR)
 # myxtab(nhanes0$RIDRETH3, nhanes1$RIDRETH3)
 # myxtab(nhanes0$DMDEDUC2, nhanes1$DMDEDUC2)
 # myxtab(nhanes0$INDHHIN2, nhanes1$income)
@@ -448,7 +458,7 @@ nhanes1 <- nhanes0 %>%
 # myxtab(nhanes0$MCQ160D, nhanes1$MCQ160D)
 # myxtab(nhanes0$MCQ160E, nhanes1$MCQ160E)
 # myxtab(nhanes0$MCQ160F, nhanes1$MCQ160F)
-# # 1 -> Yes
+# # Yes -> Yes
 # myxtab(nhanes0$MCQ160B, nhanes1$cvd)
 # myxtab(nhanes0$MCQ160C, nhanes1$cvd)
 # myxtab(nhanes0$MCQ160D, nhanes1$cvd)
@@ -508,23 +518,15 @@ nhanes1 <- nhanes0 %>%
 # Labels ####
 #---
 
-# Use old dataset to re-label the variables that you altered but kept the same name
-for(i in 1:ncol(nhanes1)) {
-  LABEL <- Hmisc::label(nhanes1[[i]])
-  if(LABEL == "") {
-    if (names(nhanes1)[i] %in% names(nhanes0)) {
-      Hmisc::label(nhanes1[[i]]) <- Hmisc::label(nhanes0[[which(names(nhanes0) == names(nhanes1)[i])]])
-    }
-  }
-}
-# Label derived variables
-Hmisc::label(nhanes1$income) <- "Annual household income"
-Hmisc::label(nhanes1$sbp)    <- "Systolic BP (mean of 2nd and 3rd)"
-Hmisc::label(nhanes1$dbp)    <- "Diastolic BP (mean of 2nd and 3rd)"
-Hmisc::label(nhanes1$cvd)    <- "Ever told had HF/CHD/Angina/MI/Stroke"
-Hmisc::label(nhanes1$phq9)   <- "PHQ-9 total"
-Hmisc::label(nhanes1$smoker) <- "Smoking status"
-Hmisc::label(nhanes1)
+# SKIP
+# # Label derived variables
+# Hmisc::label(nhanes1$income) <- "Annual household income"
+# Hmisc::label(nhanes1$sbp)    <- "Systolic BP (mean of 2nd and 3rd)"
+# Hmisc::label(nhanes1$dbp)    <- "Diastolic BP (mean of 2nd and 3rd)"
+# Hmisc::label(nhanes1$cvd)    <- "Ever told had HF/CHD/Angina/MI/Stroke"
+# Hmisc::label(nhanes1$phq9)   <- "PHQ-9 total"
+# Hmisc::label(nhanes1$smoker) <- "Smoking status"
+# Hmisc::label(nhanes1)
 
 # Drop some extra variables
 nhanes <- nhanes1 %>%
@@ -794,5 +796,10 @@ nhanesf.complete.30 <- nhanesf.complete[ROWS.SUBSET,]
 nrow(nhanesf.complete.30)
 
 save(nhanesf.complete.30, file = "nhanesf.complete.30_rmph.Rdata")
+
+
+
+
+
 
 
