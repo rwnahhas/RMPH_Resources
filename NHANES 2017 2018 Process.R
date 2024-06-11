@@ -6,6 +6,7 @@
 # Program Name:    NHANES 2017 2018 Process.R
 # Analyst:         Ramzi W. Nahhas
 # Date:            September 1, 2021
+# Updated:         March 11, 2024
 # Contents:        Download and process NHANES data to create example datasets
 #---
 

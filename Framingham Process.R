@@ -15,6 +15,7 @@
 # Program Name:    Framingham Process.R
 # Analyst:         Ramzi W. Nahhas
 # Date:            October 27, 2021
+# Updated:         June 11, 2024 (removed labels)
 # Contents:        Process Framingham dataset
 #---
 
@@ -29,6 +30,9 @@
 # with this dataset are encouraged to ensure all users are aware that this dataset is
 # inappropriate for publication purposes.)"
 # (Framingham Longitudinal Data Documentation.pdf)
+
+# install.packages("tidyverse", "Hmisc)
+library(tidyverse)
 
 #---
 # Load data ####
@@ -181,7 +185,6 @@ nrow(fram0)
 
 # NOTE: HDLC and LDLC were collected only in Period 3
 
-library(tidyverse)
 # Create factors
 fram <- fram0 %>% 
   mutate(SEX = factor(SEX,
@@ -285,49 +288,6 @@ fram <- fram0 %>%
 # summary(fram$TIMECVD)
 # summary(fram$TIMEHYP)
 # summary(fram$TIMEDTH)
-
-# Apply labels (see Framingham Longitudinal Data Documentation.pdf)
-{
-  Hmisc::label(fram$EDUC) <- "Baseline education"
-  Hmisc::label(fram$SEX) <- "Sex"
-  Hmisc::label(fram$RANDID) <- "Random ID"
-  Hmisc::label(fram$TOTCHOL) <- "Serum Cholesterol mg/dL"
-  Hmisc::label(fram$AGE) <- "Age (years) at examination"
-  Hmisc::label(fram$SYSBP) <- "Systolic BP mmHg"
-  Hmisc::label(fram$DIABP) <- "Diastolic BP mmHg"
-  Hmisc::label(fram$CURSMOKE) <- "Current Cig Smoker"
-  Hmisc::label(fram$CIGPDAY) <- "Cigarettes per day"
-  Hmisc::label(fram$BMI) <- "Body Mass Index (kg/m2)"
-  Hmisc::label(fram$DIABETES) <- "Diabetic Y/N"
-  Hmisc::label(fram$BPMEDS) <- "Anti-hypertensive meds Y/N"
-  Hmisc::label(fram$HEARTRTE) <- "Ventricular Rate (beats/min)"
-  Hmisc::label(fram$GLUCOSE) <- "Casual Glucose mg/dL"
-  Hmisc::label(fram$PREVCHD) <- "Prevalent CHD (MI,AP,CI)"
-  Hmisc::label(fram$PREVAP) <- "Prevalent Angina"
-  Hmisc::label(fram$PREVMI) <- "Prevalent MI (Hosp,Silent)"
-  Hmisc::label(fram$PREVSTRK) <- "Prevalent Stroke (Infarct,Hem)"
-  Hmisc::label(fram$PREVHYP) <- "Prevalent Hypertension"
-  Hmisc::label(fram$TIME) <- "Days since Index Exam"
-  Hmisc::label(fram$PERIOD) <- "Examination cycle"
-  Hmisc::label(fram$HDLC) <- "HDL Cholesterol mg/dL"
-  Hmisc::label(fram$LDLC) <- "LDL Cholesterol mg/dL"
-  Hmisc::label(fram$DEATH) <- "Death indicator"
-  Hmisc::label(fram$ANGINA) <- "Incident Angina Pectoris"
-  Hmisc::label(fram$HOSPMI) <- "Incident Hospitalized MI"
-  Hmisc::label(fram$MI_FCHD) <- "Incident Hosp MI-Fatal CHD"
-  Hmisc::label(fram$ANYCHD) <- "Incident Hosp MI, AP, CI, Fatal CHD"
-  Hmisc::label(fram$STROKE) <- "Incident Stroke Fatal/non-fatal"
-  Hmisc::label(fram$CVD) <- "Incident Hosp MI or Stroke, Fatal or Non"
-  Hmisc::label(fram$HYPERTEN) <- "Incident Hypertension"
-  Hmisc::label(fram$TIMEAP) <- "Days Baseline to Incident Angina"
-  Hmisc::label(fram$TIMEMI) <- "Days Baseline to Incident Hosp MI"
-  Hmisc::label(fram$TIMEMIFC) <- "Days Baseline to Incident MI-Fatal CHD"
-  Hmisc::label(fram$TIMECHD) <- "Days Baseline to Incident Any CHD"
-  Hmisc::label(fram$TIMESTRK) <- "Days Baseline to Incident Stroke"
-  Hmisc::label(fram$TIMECVD) <- "Days Baseline to Incident CVD"
-  Hmisc::label(fram$TIMEDTH) <- "Days Baseline to Death"
-  Hmisc::label(fram$TIMEHYP) <- "Days Baseline to Incident Hypertension"
-}
 
 # Fix one individual who has TIMEHYP = 0 but PREVHYPE = "Free of disease"
 table(fram$PREVHYP, exclude = NULL)

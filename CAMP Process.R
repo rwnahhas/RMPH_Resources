@@ -15,13 +15,17 @@
 # Program Name:    CAMP Process.R
 # Analyst:         Ramzi W. Nahhas
 # Date:            September 15, 2021
+# Updated:         June 11, 2024 (removed labels)
 # Contents:        Process CAMP dataset
 #---
 
 # Downloaded 9/10/2021
 # https://biolincc.nhlbi.nih.gov/teaching/
 # https://biolincc.nhlbi.nih.gov/requests/teaching-dataset-request/
-  
+
+# install.packages("tidyverse", "Hmisc)
+library(tidyverse)
+
 #---
 # Load data ####
 #---
@@ -29,7 +33,6 @@
 camp0 <- read.csv("camp_teach.csv", na.strings = c("", " "), header = TRUE, stringsAsFactors = F, as.is = T)
 head(camp0)
 
-library(tidyverse)
 # Create factors
 camp <- camp0 %>% 
   mutate(TX = factor(TX,
@@ -95,38 +98,6 @@ camp <- camp0 %>%
 # summary(camp[camp$visitc %in% c(0, 12, 24, 36, 48),])
 # summary(camp[camp$visitc %in% c(0, 48),])
 
-# Apply labels (see CAMP_Teaching_Documentation.pdf)
-{
-  Hmisc::label(camp$TX) <- "Treatment group (4 levels)"
-  Hmisc::label(camp$TG) <- "Treatment group"
-  Hmisc::label(camp$id) <- "Randomized participant ID"
-  Hmisc::label(camp$age_rz) <- "Age in years at Randomization"
-  Hmisc::label(camp$GENDER) <- "Gender"
-  Hmisc::label(camp$ETHNIC) <- "Race/Ethnicity"
-  Hmisc::label(camp$hemog) <- "Hemoglobin (g/dl)"
-  Hmisc::label(camp$PREFEV) <- "Pre-bronchodilator FEV1"
-  Hmisc::label(camp$PREFVC) <- "Pre-bronchodilator FVC"
-  Hmisc::label(camp$PREFF) <- "Pre-bronchodilator FEV1/FVC ratio %"
-  Hmisc::label(camp$PREPF) <- "Pre-bronchodilator peak flow"
-  Hmisc::label(camp$POSFEV) <- "Post-bronchodilator FEV1"
-  Hmisc::label(camp$POSFVC) <- "Post-bronchodilator FVC"
-  Hmisc::label(camp$POSFF) <- "Post-bronchodilator FEV1/FVC ratio %"
-  Hmisc::label(camp$POSPF) <- "Post-bronchodilator peak flow"
-  Hmisc::label(camp$PREFEVPP) <- "Pre-bronchodilator FEV1 %pred"
-  Hmisc::label(camp$PREFVCPP) <- "Pre-bronchodilator FVC %pred"
-  Hmisc::label(camp$POSFEVPP) <- "Post-bronchodilator FEV1 %pred"
-  Hmisc::label(camp$POSFVCPP) <- "Post-bronchodilator FVC %pred"
-  Hmisc::label(camp$wbc) <- "White Blood Cell count (1000 cells/ul)"
-  Hmisc::label(camp$agehome) <- "Age of current home (years)"
-  Hmisc::label(camp$anypet) <- "Any pets"
-  Hmisc::label(camp$woodstove) <- "Used wood stove for heating/cooking"
-  Hmisc::label(camp$dehumid) <- "Use a dehumidifier"
-  Hmisc::label(camp$parent_smokes) <- "Either Parent/partner smokes in home"
-  Hmisc::label(camp$any_smokes) <- "Anyone (including visitors) smokes in home"
-  Hmisc::label(camp$visitc) <- "Followup Visit (mos)"
-  Hmisc::label(camp$fdays) <- "Days since randomization"
-}
-
 #---
 # Summarize data ####
 #---
@@ -180,7 +151,6 @@ camp <- camp0 %>%
 # myfun2("dehumid", 2) # Does not match... Probably because I set DK to missing so that changed the denominator
 # myfun2("parent_smokes", 2)
 # myfun2("any_smokes", 2)
-# 
 
 #---
 # Create wide-form dataset just using 0 and 48 month data ####

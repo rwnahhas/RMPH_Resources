@@ -399,11 +399,11 @@ OUT <- mysim(NSIM   = 25,
 # This figure looks great, too
 # Range of sample sizes across the simulations:
 # MCAR n
-# [1] 634 677
+# [1] 635 651
 # MAR n
-# [1] 643 684
+# [1] 638 672
 # MNAR n
-# [1] 615 653
+# [1] 592 632
 
 # Export figure to "MissingDataSimulation.png"
 

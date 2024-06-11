@@ -6,6 +6,7 @@
 # Program Name:    Natality 2018 Process.R
 # Analyst:         Ramzi W. Nahhas
 # Date:            August 31, 2021
+# Updated:         June 11, 2024 (removed labels)
 # Contents:        Read 2018 U.S. Natality (births) data and create analysis dataset
 #---
 
@@ -20,6 +21,7 @@
 #---
 # Load data ####
 #---
+# install.packages("tidyverse", "Hmisc")
 library(tidyverse)
 mydat0 <- read_csv("natl2018us.csv")
 # Takes a long time to load
@@ -282,9 +284,6 @@ table(natality$gestage37, exclude = NULL)
 table(natality$preterm01, exclude = NULL)
 tapply(natality$gestage37, natality$preterm01, range, na.rm=T)
 
-Hmisc::label(natality$preterm01) <- "Preterm birth"
-Hmisc::label(natality$gestage37) <- "Gestational Age (censored at 37 weeks)"
-
 # No censored observations prior to 37 weeks
 # Add some to make the dataset more interesting
 
@@ -317,46 +316,6 @@ summary(natality)
 natality %>%
   select(gestage37, preterm01, MAGER, MRACEHISP, RF_PPTERM, RF_CESAR) %>%
   head(5)
-
-{
-  Hmisc::label(natality$DBWT) <- "Birth Weight (g)"
-  Hmisc::label(natality$BWTR4) <- "Birth Weight category"
-  Hmisc::label(natality$MRACEHISP) <- "Mother Race/Hispanic Origin"
-  Hmisc::label(natality$FRACEHISP) <- "Father Race/Hispanic Origin"
-  Hmisc::label(natality$DMAR) <- "Marital Status"
-  Hmisc::label(natality$MEDUC) <- "Mother Education"
-  Hmisc::label(natality$FEDUC) <- "Father Education"
-  Hmisc::label(natality$MAGER) <- "Mother Age"
-  Hmisc::label(natality$FAGECOMB) <- "Father Age"
-  Hmisc::label(natality$PRIORLIVE) <- "Prior Births Now Living"
-  Hmisc::label(natality$PRIORDEAD) <- "Prior Births Now Dead"
-  Hmisc::label(natality$PRIORTERM) <- "Prior Other Terminations"
-  Hmisc::label(natality$LBO_REC) <- "Live Birth Order"
-  Hmisc::label(natality$TBO_REC) <- "Total Birth Order"
-  Hmisc::label(natality$ILLB_R) <- "Time Since Last Live Birth (months)"
-  Hmisc::label(natality$PRECARE) <- "Month Prenatal Care Began"
-  Hmisc::label(natality$WIC) <- "WIC"
-  Hmisc::label(natality$CIG_REC) <- "Smoked during pregnancy"
-  Hmisc::label(natality$BMI) <- "Mother BMI"
-  Hmisc::label(natality$RF_GDIAB) <- "Gestational Diabetes"
-  Hmisc::label(natality$RF_PHYPE) <- "Pre-pregnancy Hypertension"
-  Hmisc::label(natality$RF_GHYPE) <- "Gestational Hypertension"
-  Hmisc::label(natality$RF_PPTERM) <- "Previous Preterm Birth"
-  Hmisc::label(natality$RF_INFTR) <- "Infertility Treatment Used"
-  Hmisc::label(natality$RF_CESAR) <- "Previous Cesarean"
-  Hmisc::label(natality$risks) <- "Risk Factors Reported"
-  Hmisc::label(natality$LD_INDL) <- "Induction of Labor"
-  Hmisc::label(natality$LD_AUGM) <- "Augmentation of Labor"
-  Hmisc::label(natality$LD_STER) <- "Steroids"
-  Hmisc::label(natality$LD_ANTB) <- "Antibiotics"
-  Hmisc::label(natality$LD_ANES) <- "Anesthesia"
-  Hmisc::label(natality$APGAR5) <- "Five Minute APGAR Score"
-  Hmisc::label(natality$DPLURAL) <- "Plurality"
-  Hmisc::label(natality$SEX) <- "Sex of Infant"
-  Hmisc::label(natality$COMBGEST) <- "Gestational Age"
-  Hmisc::label(natality$preterm) <- "Preterm birth"
-  Hmisc::label(natality$AB_NICU) <- "Admission to NICU"
-}
 
 #---
 # Save final dataset ####

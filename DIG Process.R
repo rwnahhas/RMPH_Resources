@@ -15,13 +15,17 @@
 # Program Name:    DIG Process.R
 # Analyst:         Ramzi W. Nahhas
 # Date:            September 15, 2021
+# Updated:         June 11, 2024 (removed labels)
 # Contents:        Process Digitalis dataset
 #---
 
 # Downloaded 9/10/2021
 # https://biolincc.nhlbi.nih.gov/teaching/
 # https://biolincc.nhlbi.nih.gov/requests/teaching-dataset-request/
-  
+
+# install.packages("tidyverse", "Hmisc)
+library(tidyverse)
+
 #---
 # Load data ####
 #---
@@ -29,7 +33,6 @@
 dig0 <- read.csv("DIG.csv", na.strings = c("", " "), header = TRUE, stringsAsFactors = F, as.is = T)
 head(dig0)
 
-library(tidyverse)
 # Create factors
 dig <- dig0 %>% 
   mutate(TRTMT    = factor(TRTMT, levels = 0:1, labels = c("Placebo", "Digoxin")),
@@ -120,82 +123,6 @@ dig <- dig0 %>%
 nrow(dig) # 6800
 length(unique(dig$ID)) # 6800
 
-# Apply labels (see DIG Documentation with supplement.pdf)
-{
-  Hmisc::label(dig$ID) <- "Patient ID"
-  Hmisc::label(dig$TRTMT) <- "Treatment Group"
-  Hmisc::label(dig$AGE) <- "Calculated: age at randomization"
-  Hmisc::label(dig$RACE) <- "Q5: Race"
-  Hmisc::label(dig$SEX) <- "Q4: Sex"
-  Hmisc::label(dig$EJF_PER) <- "Q3: Ejection fraction (percent)"
-  Hmisc::label(dig$EJFMETH) <- "Q3A: Ejection Fraction method"
-  Hmisc::label(dig$CHESTX) <- "Q6: Chest X-ray (CT-Ratio)"
-  Hmisc::label(dig$BMI) <- "Calculated: Body Mass Index (kg/M*M)"
-  Hmisc::label(dig$KLEVEL) <- "Q9A: Serum Potassium level"
-  Hmisc::label(dig$CREAT) <- "Q9: Serum Creatinine (mg/dL)"
-  Hmisc::label(dig$DIGDOSER) <- "Q10: Recommended Digoxin dose"
-  Hmisc::label(dig$CHFDUR) <- "Q12: Duration of CHF (months)"
-  Hmisc::label(dig$RALES) <- "Q13: Rales"
-  Hmisc::label(dig$ELEVJVP) <- "Q14: Elevated jugular venous pressure"
-  Hmisc::label(dig$PEDEMA) <- "Q15: Peripheral Edema"
-  Hmisc::label(dig$RESTDYS) <- "Q16: Dyspnea at Rest"
-  Hmisc::label(dig$EXERTDYS) <- "Q17: Dyspnea on Exertion"
-  Hmisc::label(dig$ACTLIMIT) <- "Q18: Limitation of activity"
-  Hmisc::label(dig$S3) <- "Q19: S3 Gallop"
-  Hmisc::label(dig$PULCONG) <- "Q20: Pulmonary congestion"
-  Hmisc::label(dig$NSYM) <- "Calculated: Sum of Q13-Q20, Y/N status"
-  Hmisc::label(dig$HEARTRTE) <- "Q21: Heart Rate (beats/min)"
-  Hmisc::label(dig$DIABP) <- "Q22: Diastolic BP (mmHg)"
-  Hmisc::label(dig$SYSBP) <- "Q22: Sysolic BP (mmHg)"
-  Hmisc::label(dig$FUNCTCLS) <- "Q23: NYHA Functional Class"
-  Hmisc::label(dig$chfcause) <- "Q24: CHF Etiology"
-  Hmisc::label(dig$PREVMI) <- "Q25: Previous Myocardial Infarction"
-  Hmisc::label(dig$ANGINA) <- "Q26: Current Angina"
-  Hmisc::label(dig$DIABETES) <- "Q27: History of Diabetes"
-  Hmisc::label(dig$HYPERTEN) <- "Q28: History of Hypertension"
-  Hmisc::label(dig$DIGUSE) <- "Q29: Digoxin within past week"
-  # Hmisc::label(dig$DIURETK) <- "Q30: Potassium sparing Diuretics"
-  # Hmisc::label(dig$DIURET) <- "Q31: Other Diuretics"
-  Hmisc::label(dig$KSUPP) <- "Q31A: Potassium supplements"
-  Hmisc::label(dig$ACEINHIB) <- "Q32: Ace inhibitors"
-  Hmisc::label(dig$NITRATES) <- "Q33: Nitrates"
-  Hmisc::label(dig$HYDRAL) <- "Q34: Hydralazine"
-  Hmisc::label(dig$VASOD) <- "Q35: Other Vasodilators"
-  Hmisc::label(dig$DIGDOSE) <- "Q36: Dose of Digoxin/Placebo prescribed"
-  Hmisc::label(dig$CVD) <- "Hosp: Cardiovascular Disease"
-  Hmisc::label(dig$CVDDAYS) <- "Days randomization to First CVD Hosp"
-  Hmisc::label(dig$WHF) <- "Hosp: Worsening Heart Failure"
-  Hmisc::label(dig$WHFDAYS) <- "Days randomization to First WHF Hosp"
-  Hmisc::label(dig$DIG) <- "Hosp: Digoxin Toxicity"
-  Hmisc::label(dig$DIGDAYS) <- "Days rand. to First Digoxin Tox Hosp"
-  Hmisc::label(dig$MI) <- "Hosp: Myocardial Infarction"
-  Hmisc::label(dig$MIDAYS) <- "Days randomization to First MI Hosp"
-  Hmisc::label(dig$UANG) <- "Hosp: Unstable Angina"
-  Hmisc::label(dig$UANGDAYS) <- "Days rand. to First Unstable Angina Hosp"
-  Hmisc::label(dig$STRK) <- "Hosp: Stroke"
-  Hmisc::label(dig$STRKDAYS) <- "Days randomization to First Stroke Hosp"
-  Hmisc::label(dig$SVA) <- "Hosp: Supraventricular Arrhythmia"
-  Hmisc::label(dig$SVADAYS) <- "Days rand. to First SupraVent Arr. Hosp"
-  Hmisc::label(dig$VENA) <- "Hosp: Ventricular Arrhythmia"
-  Hmisc::label(dig$VENADAYS) <- "Days rand. to First Vent. Arr. Hosp"
-  Hmisc::label(dig$CREV) <- "Hosp: Coronary Revascularization"
-  Hmisc::label(dig$CREVDAYS) <- "Days rand. to First Cor. Revasc."
-  Hmisc::label(dig$OCVD) <- "Hosp: Other Cardiovascular Event"
-  Hmisc::label(dig$OCVDDAYS) <- "Days rand. to First Other CVD Hosp"
-  Hmisc::label(dig$RINF) <- "Hosp: Respiratory Infection"
-  Hmisc::label(dig$RINFDAYS) <- "Days rand. to First Resp. Infection Hosp"
-  Hmisc::label(dig$OTH) <- "Hosp: Other noncardiac, nonvascular"
-  Hmisc::label(dig$OTHDAYS) <- "Days rand. to 1st Other Non CVD Hosp"
-  Hmisc::label(dig$HOSP) <- "Hosp: Any Hospitalization"
-  Hmisc::label(dig$HOSPDAYS) <- "Days randomization to First Any Hosp"
-  Hmisc::label(dig$NHOSP) <- "Number of Hospitalizations"
-  Hmisc::label(dig$DEATH) <- "Vital Status of Patient"
-  Hmisc::label(dig$DEATHDAY) <- "Days till last followup or death"
-  Hmisc::label(dig$REASON) <- "Cause of Death"
-  Hmisc::label(dig$DWHF) <- "Primary Endpt: Death or Hosp from worsening HF"
-  Hmisc::label(dig$DWHFDAYS) <- "Days rand. to death or Hosp from worsening HF"
-}
-
 # tapply(dig$MIDAYS, dig$MI, range, na.rm=T)
 # hist(dig$MIDAYS[dig$MI == "No Event"])
 # hist(dig$MIDAYS[dig$MI == "First Event"])
@@ -244,17 +171,12 @@ length(unique(dig$ID)) # 6800
 # myfun2("ANGINA")
 # myfun2("DIABETES")
 # # Etc.
-# 
-# write(Hmisc::html(Hmisc::describe(dig)), "dig.html")
-# # View the HTML file to examine the distribution of each variable
+ 
+write(Hmisc::html(Hmisc::describe(dig)), "dig.html")
+# View the HTML file to examine the distribution of each variable
 
 #---
 # Save data ####
 #---
 
 save(dig, file = "dig_rmph.rData")
-
-
-
-
-

@@ -6,6 +6,7 @@
 ## Program Name:    NSDUH_2019 Process.R
 ## Analyst:         Ramzi W. Nahhas
 ## Date:            October 3, 2021
+## Updated:         June 11, 2024 (removed labels)
 ## Contents:        Process NSDUH 2019 and create subsample for teaching
 #---
 
@@ -477,69 +478,6 @@ table(PUF2019_100920$amdeyr, nsduh$psych_adult_mdd_past1y, exclude = NULL)
 dim(nsduh)
 
 #---
-# Labels ####
-#---
-
-{
-  Hmisc::label(nsduh$cig_lifetime) <- "cigflag: RC-CIGARETTES - EVER USED"
-  Hmisc::label(nsduh$cig_agefirst) <- "ircigage: CIGARETTE AGE OF FIRST USE - IMPUTATION REVISED"
-  Hmisc::label(nsduh$cig_last) <- "ircigrc: CIGARETTE RECENCY - IMPUTATION REVISED"
-  Hmisc::label(nsduh$cig_past30d) <- "ircigfm: CIG FREQUENCY PAST MONTH - IMPUTATION REVISED"
-  Hmisc::label(nsduh$cig_100_lifetime) <- "CIG100LF: HAVE YOU SMOKED 100 CIGS IN YOUR LIFE"
-  Hmisc::label(nsduh$alc_lifetime) <- "alcflag: RC-ALCOHOL - EVER USED"
-  Hmisc::label(nsduh$alc_agefirst) <- "iralcage: ALCOHOL AGE OF FIRST USE - IMPUTATION REVISED"
-  Hmisc::label(nsduh$alc_last) <- "iralcrc: ALCOHOL RECENCY - IMPUTATION REVISED"
-  Hmisc::label(nsduh$alc_past30d) <- "iralcfm: ALCOHOL FREQUENCY PAST MONTH - IMPUTATION REVISED"
-  Hmisc::label(nsduh$alc_binge_past30d) <- "IRALCBNG30D: BINGE ALCOHOL FREQUENCY PAST MONTH - IMPUTATION REVISED"
-  Hmisc::label(nsduh$alc_past1y) <- "iralcfy: ALCOHOL FREQUENCY PAST YEAR - IMPUTATION REVISED"
-  Hmisc::label(nsduh$mj_lifetime) <- "mrjflag: RC-MARIJUANA - EVER USED"
-  Hmisc::label(nsduh$mj_agefirst) <- "irmjage: MARIJUANA AGE OF FIRST USE - IMPUTATION REVISED"
-  Hmisc::label(nsduh$mj_last) <- "irmjrc: MARIJUANA RECENCY - IMPUTATION REVISED"
-  Hmisc::label(nsduh$mj_past30d) <- "irmjfm: MARIJUANA FREQUENCY PAST MONTH - IMPUTATION REVISED"
-  Hmisc::label(nsduh$mj_past1y) <- "irmjfy: MARIJUANA FREQUENCY PAST YEAR - IMPUTATION REVISED"
-  Hmisc::label(nsduh$her_lifetime) <- "herflag: RC-HEROIN - EVER USED"
-  Hmisc::label(nsduh$her_agefirst) <- "irherage: HEROIN AGE OF FIRST USE - IMPUTATION REVISED"
-  Hmisc::label(nsduh$her_last) <- "irherrc: HEROIN RECENCY - IMPUTATION REVISED"
-  Hmisc::label(nsduh$her_past30d) <- "irherfm: HEROIN FREQUENCY PAST MONTH - IMPUTATION REVISED"
-  Hmisc::label(nsduh$her_past1y) <- "irherfy: HEROIN FREQUENCY PAST YEAR - IMPUTATION REVISED"
-  Hmisc::label(nsduh$metham_lifetime) <- "methamflag: RC-METHAMPHETAMINE - EVER USED"
-  Hmisc::label(nsduh$metham_agefirst) <- "irmethamage: METHAMPHETAMINE AGE OF FIRST USE - IMPUTATION REVISED"
-  Hmisc::label(nsduh$metham_last) <- "irmethamrec: METHAMPHETAMINE RECENCY - IMPUTATION REVISED"
-  Hmisc::label(nsduh$metham_past30d) <- "IRMETHAM30N: METHAMPHETAMINE FREQUENCY PAST MONTH - IMPUTATION REVISED"
-  Hmisc::label(nsduh$metham_past1y) <- "irmethamyfq: METH FREQUENCY PAST YEAR - IMPUTATION REVISED"
-  Hmisc::label(nsduh$painpill_lifetime) <- "pnrnmflag: RC-PAIN RELIEVERS - EVER MISUSED"
-  Hmisc::label(nsduh$painpill_last) <- "irpnrnmrec: PAIN RELIEVER MISUSE RECENCY - IMPUTATION REVISED"
-  Hmisc::label(nsduh$her_painpill_past30d_01) <- "opinmmon: RC-OPIOIDS - PAST MONTH MISUSE"
-  Hmisc::label(nsduh$her_painpill_past1y_01) <- "opinmyr: RC-OPIOIDS - PAST YEAR MISUSE"
-  Hmisc::label(nsduh$her_painpill_past1y_cat) <- "herpnryr: RC-HEROIN USE AND/OR PAIN RELIEVER MISUSE - PAST YEAR"
-  Hmisc::label(nsduh$illicit_lifetime) <- "illflag: RC-ANY ILLICIT DRUG - EVER USED"
-  Hmisc::label(nsduh$illicit_past30d_01) <- "illmon: RC-ANY ILLICIT DRUG - PAST MONTH USE"
-  Hmisc::label(nsduh$illicit_past1y_01) <- "illyr: RC-ANY ILLICIT DRUG - PAST YEAR USE"
-  Hmisc::label(nsduh$tx_substance_lifetime) <- "TXEVRRCVD2: RC-RCVD TRT ANY LOC FOR ILL DRG OR ALC USE IN LIFETIME"
-  Hmisc::label(nsduh$tx_adult_mh_past1y) <- "AMHTXRC3: RC-RCVD ANY MENTAL HEALTH TRT IN PST YR"
-  Hmisc::label(nsduh$bmi) <- "BMI2: RC-BODY MASS INDEX (BMI)"
-  Hmisc::label(nsduh$psych_adult_distress_past30d) <- "K6SCMON: RC-K6 TOTAL SCORE IN PAST MONTH"
-  Hmisc::label(nsduh$psych_adult_distress_past1y) <- "K6SCYR: RC-K6 TOTAL SCORE IN WORST MONTH OF PAST YEAR"
-  Hmisc::label(nsduh$psych_adult_suicidal_thoughs_past1y) <- "mhsuithk: RC-SERIOUSLY THOUGHT ABOUT KILLING SELF IN PAST YEAR"
-  Hmisc::label(nsduh$psych_adult_whodas) <- "WHODASC2: RC-WHODAS TOTAL SCORE"
-  Hmisc::label(nsduh$psych_adult_mdd_lifetime) <- "amdelt: RC-ADULT: LIFETIME MAJOR DEPRESSIVE EPISODE (MDE)"
-  Hmisc::label(nsduh$psych_adult_mdd_past1y) <- "amdeyr: RC-ADULT: PAST YEAR MAJOR DEPRESSIVE EPISODE (MDE)"
-  Hmisc::label(nsduh$demog_sex) <- "irsex: IMPUTATION REVISED GENDER"
-  Hmisc::label(nsduh$demog_age_cat) <- "AGE2: RECODE - FINAL EDITED AGE"
-  Hmisc::label(nsduh$demog_age_cat6) <- "CATAG6: RC-AGE CATEGORY RECODE (6 LEVELS)"
-  Hmisc::label(nsduh$demog_race) <- "NEWRACE2: RC-RACE/HISPANICITY RECODE (7 LEVELS)"
-  Hmisc::label(nsduh$demog_health) <- "HEALTH2: RC-OVERALL HEALTH RECODE"
-  Hmisc::label(nsduh$demog_marital) <- "irmarit: IMPUTATION REVISED MARITAL STATUS"
-  Hmisc::label(nsduh$demog_educ) <- "IREDUHIGHST2: EDUCATION - RECODED IMPUTATION REVISED"
-  Hmisc::label(nsduh$demog_educ_cat4) <- "eduhighcat: RC-EDUCATION CATEGORIES"
-  Hmisc::label(nsduh$demog_employ) <- "IRWRKSTAT18: EMPLOYMENT STATUS 18+ - IMPUTATION REVISED"
-  Hmisc::label(nsduh$demog_income) <- "income: RC-TOTAL FAMILY INCOME RECODE"
-  Hmisc::label(nsduh$demog_urban) <- "COUTYP4: COUNTY METRO/NONMETRO STATUS (2013 3-LEVEL)"
-}
-
-cbind(names(nsduh), Hmisc::label(nsduh))
-
-#---
 # Subsample with replacement using survey weights ####
 #---
 
@@ -577,18 +515,6 @@ nsduh_adult_sub = droplevels(nsduh_adult_sub)
 # Drop variables
 nsduh_adult_sub <- nsduh_adult_sub %>%
   select(-vestr, -verep, -ANALWT_C)
-
-# Reapply labels (for some reason some are dropped during the subsetting)
-for(i in 1:ncol(nsduh_adult_sub)) {
-  NAME <- names(nsduh_adult_sub)[i]
-  Hmisc::label(nsduh_adult_sub[[NAME]]) <- Hmisc::label(nsduh[[NAME]]) 
-}
-
-# cbind(names(nsduh), Hmisc::label(nsduh))
-# cbind(names(nsduh_adult_sub), Hmisc::label(nsduh_adult_sub))
-# 
-# all(names(nsduh) == names(nsduh_adult_sub))
-# cbind(names(nsduh), names(nsduh_adult_sub))
 
 #---
 # Summarize data ####
