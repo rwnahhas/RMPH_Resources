@@ -19,7 +19,7 @@
 # load("nsduh2019_adult_sub_rmph.RData")
 load("Data/nsduh2019_adult_sub_rmph.RData")
 
-# install.packages("tidyverse", "Hmisc")
+# install.packages("tidyverse", "Hmisc", "mice")
 library(tidyverse)
 library(mice)
 
