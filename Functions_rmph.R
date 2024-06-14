@@ -4,16 +4,20 @@
 
 # July 13, 2022
 
+# June 12, 2024
+# Update: Changed order of x and y in plotting functions to match how
+#         they are specified in a regression (y first)
+
 # These functions are provided with no express or implied warranty and
 # are licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License
 # (https://creativecommons.org/licenses/by-nc-nd/4.0/).
 
 # Linear regression ####
 
-contplot <- function(PREDICTOR, OUTCOME, DAT, COL = "gray", ...) {
+contplot <- function(OUTCOME, PREDICTOR, DAT, COL = "gray", lwd = 2, lty = 1, ...) {
   # The contplot() function is provided with no express or implied warranty.
   
-  # Plotting OUTCOME vs. a continuous predictor
+  # Plotting OUTCOME vs. a continuous PREDICTOR
   # OUTCOME is a string indicating the outcome
   # PREDICTOR is a string indicating the predictor
   # DAT is the dataframe containing this data
@@ -22,15 +26,15 @@ contplot <- function(PREDICTOR, OUTCOME, DAT, COL = "gray", ...) {
   y <- DAT[[OUTCOME]]
   x <- DAT[[PREDICTOR]]
   # Scatterplot with regression line
-  plot(x, y, las = 1, pch = 20, col=COL,
+  plot(y ~ x, las = 1, pch = 20, col=COL,
        font.lab = 2, font.axis = 2, ...)
-  abline(lm(y ~ x), col = "red", lwd = 2)
+  abline(lm(y ~ x), col = "red", lwd = lwd, lty = lty)
 }
 
-catplot <- function(PREDICTOR, OUTCOME, DAT, COL = "gray", ...) {
+catplot <- function(OUTCOME, PREDICTOR, DAT, COL = "gray", lwd = 2, lty = 1, ...) {
   # The catplot() function is provided with no express or implied warranty.
   
-  # Plotting OUTCOME vs. a categorical predictor
+  # Plotting OUTCOME vs. a categorical PREDICTOR
   # OUTCOME is a string indicating the outcome
   # PREDICTOR is a string indicating the predictor
   # DAT is the dataframe containing this data
@@ -38,17 +42,38 @@ catplot <- function(PREDICTOR, OUTCOME, DAT, COL = "gray", ...) {
   # Assign to y and x
   y <- DAT[[OUTCOME]]
   x <- DAT[[PREDICTOR]]
-  # Plot
-  plot.default(x, y, las = 1, pch = 20, col=COL,
-               font.lab = 2, font.axis = 2, xaxt = "n", ...)
-  LEVELS <- levels(x)
-  NX     <- length(LEVELS)
-  axis(1, at = 1:NX, labels = LEVELS, font = 2)
-  # Compute mean y at each level of x
-  MEANS <- tapply(y, x, mean, na.rm = T)
-  # Add means to the plot
-  points(1:NX, MEANS, col = "black", pch = 20, cex = 3)
-  lines( 1:NX, MEANS, col = "red")  
+  # Check
+  if(!is.factor(x)) {
+    return("Error: PREDICTOR must be a factor")
+  } else {
+    # Plot
+    plot.default(y ~ x, las = 1, pch = 20, col=COL,
+                 font.lab = 2, font.axis = 2, xaxt = "n", ...)
+    LEVELS <- levels(x)
+    NX     <- length(LEVELS)
+    axis(1, at = 1:NX, labels = LEVELS, font = 2)
+    # Compute mean y at each level of x
+    MEANS <- tapply(y, x, mean, na.rm = T)
+    # Add means to the plot
+    points(1:NX, MEANS, col = "black", pch = 20, cex = 3)
+    lines( 1:NX, MEANS, col = "red", lwd = lwd, lty = lty)  
+  }
+}
+
+plotyx <- function(OUTCOME, PREDICTOR, DAT, COL = "gray", lwd = 2, lty = 1, ...) {
+  # A wrapper that calls catplot or contplot
+
+  # Plotting OUTCOME vs. a categorical or continuous PREDICTOR
+  # OUTCOME is a string indicating the outcome
+  # PREDICTOR is a string indicating the predictor
+  # DAT is the dataframe containing this data
+  # ... allows you to pass additional arguments to plot below
+  
+  if(is.factor(DAT[[PREDICTOR]])) {
+    catplot(OUTCOME, PREDICTOR, DAT, COL = COL, lwd = lwd, lty = lty, ...)
+  } else {
+    contplot(OUTCOME, PREDICTOR, DAT, COL = COL, lwd = lwd, lty = lty, ...)
+  }
 }
 
 check_normality <- function(fit, sample.size=T, ylim = NULL, ...) {
@@ -135,6 +160,7 @@ calibration.plot <- function(fit, g = 10, show.p = T,
                              show.bins = F, show.points = F, silent = T, drop.leading0 = T,
                              zoom = F, zoom.x = zoom, zoom.y = zoom, smooth.df = 5,
                              TITLE = "Calibration Plot") {
+  
   # The calibration.plot() function is provided with no express or implied warranty.
   
   # Plot observed proportions vs. predicted probabilities, binned by predicted probability groups
@@ -180,8 +206,8 @@ calibration.plot <- function(fit, g = 10, show.p = T,
   HL <- ResourceSelection::hoslem.test(x, y, g)
   P.FORMATTED <- format(HL$p.value, digits=3, nsmall=3)
   if(drop.leading0) P.FORMATTED <- substr(P.FORMATTED, 2, nchar(P.FORMATTED))
-  P  <- case_when(HL$p.value < .001 ~ "p < .001",
-                  TRUE              ~ paste("p =", P.FORMATTED))
+  P  <- dplyr::case_when(HL$p.value < .001 ~ "p < .001",
+                         TRUE              ~ paste("p =", P.FORMATTED))
   
   # # Checking that numbers being plotted match the HL test
   # all((HL$observed[,2] - X) == 0)
