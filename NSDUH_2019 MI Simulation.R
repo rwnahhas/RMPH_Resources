@@ -65,10 +65,14 @@ mysim <- function(NSIM,
   # MAR  - Set to missing based on a model for each variable given the others
   # MNAR - Missingness also depends on the variable itself
   
-  # (this is not a perfect illustration... the MAR models actually make
-  #  use of missing values, just not in the variable being imputed. This
-  #  makes setting up the simulation much simpler and serves to illustrate the point)
-  
+  # Note about the MAR simulation step:
+  # This is not *exactly* MAR as the probability of missingness may depend on missing values
+  # in other variables, just not on missing values in the variable being set to missing.
+  # This serves as an approximation that is simpler to program and illustrates the point being made.
+  # What I mean is that my code models each variable's missingness given the complete version
+  # of the other variables, before setting any of them to missing. But, in the end, some of
+  # those are missing, so missingness in one could have depended on a missing value in another.
+
   MJ  <-  b_mj*as.numeric(nsduh_0$mj_lifetime == levels(nsduh_0$mj_lifetime)[2])
   ALC <-  b_alc*(nsduh_0$alc_agefirst - mean(nsduh_0$alc_agefirst))
   AGE <-  0.20*as.numeric(nsduh_0$demog_age_cat6 == levels(nsduh_0$demog_age_cat6)[2]) +
