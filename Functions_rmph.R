@@ -208,7 +208,7 @@ calibration.plot <- function(fit, g = 10, show.p = T,
   if(drop.leading0) P.FORMATTED <- substr(P.FORMATTED, 2, nchar(P.FORMATTED))
   P  <- dplyr::case_when(HL$p.value < .001 ~ "p < .001",
                          TRUE              ~ paste("p =", P.FORMATTED))
-  
+
   # # Checking that numbers being plotted match the HL test
   # all((HL$observed[,2] - X) == 0)
   # all((apply(HL$observed, 1, sum) - N) == 0)
